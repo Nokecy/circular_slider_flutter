@@ -41,6 +41,13 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
+  flutter_circular_slider:
+    dependency: "direct dev"
+    description:
+      name: flutter_circular_slider
+      url: "https://pub.flutter-io.cn"
+    source: hosted
+    version: "2.5.0"
   flutter_test:
     dependency: "direct dev"
     description: flutter

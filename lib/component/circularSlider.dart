@@ -2,62 +2,65 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'basePainter.dart';
 import 'indicatorPainter.dart';
-import 'dialSection.dart';
 
 class CircularSlider extends StatefulWidget {
-  CircularSlider({Key key, this.sections}) : super(key: key);
+  CircularSlider({Key key, this.value, this.onValueChange}) : super(key: key);
 
-  final List<DialSection> sections;
+  int value;
+  final void Function(int value) onValueChange;
 
   @override
   _CircularSliderState createState() => _CircularSliderState();
 }
 
 class _CircularSliderState extends State<CircularSlider> {
-  static final double boxWidthHeight = 400;
   double angle = 0;
-  bool isFirst = true;
-  Offset cursorPosition = Offset(0, boxWidthHeight / 2);
+  int value = 0;
+  double radius = 150;
+
+  @override
+  void initState() {
+    super.initState();
+    var _calculatedAngle =
+        widget.value / (180 / pi) / ((320 - 180) / 180) - 180;
+    this.setState(() => {value = widget.value, angle = _calculatedAngle});
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    var _calculatedAngle =
+        widget.value / (180 / pi) / ((320 - 180) / 180) - 180;
+    this.setState(() => {angle = _calculatedAngle});
+  }
 
   _identifyAndSetAngle(Offset localPosition) {
     double _calculatedAngle = _getAngle(localPosition);
+    var _value =
+        ((180 / pi) * _calculatedAngle * ((320 - 180) / 180) + 180).round(); //
     if (_calculatedAngle > 0) {
+      if (value != _value) {
+        widget.onValueChange(_value);
+      }
       setState(() {
-        cursorPosition = localPosition;
         angle = _calculatedAngle;
+        value = _value;
       });
     }
   }
 
   _onPanUpdate(DragUpdateDetails dragUpdateDetails) {
-    if (isFirst) {
-      setState(() {
-        isFirst = false;
-      });
-    }
     _identifyAndSetAngle(dragUpdateDetails.localPosition);
   }
 
   _onTapUp(TapUpDetails tapUpDetails) {
-    if (isFirst) {
-      setState(() {
-        isFirst = false;
-      });
-    }
     _identifyAndSetAngle(tapUpDetails.localPosition);
   }
 
   double _getAngle(Offset position) {
     double angle = 0;
-    angle = atan2(
-        boxWidthHeight / 2 - position.dy, boxWidthHeight / 2 - position.dx);
+    angle = atan2(radius - position.dy, radius - position.dx);
     return angle;
-  }
-
-  int _identifySliceIndex() {
-    double slice = 1;
-    slice = (angle / 0.628319);
-    return slice.floor();
   }
 
   Widget _buildPie() {
@@ -65,19 +68,14 @@ class _CircularSliderState extends State<CircularSlider> {
       onPanUpdate: _onPanUpdate,
       onTapUp: _onTapUp,
       child: CustomPaint(
-        painter: BasePainter(
-            dialSections: widget.sections,
-            currentSliceIndex: this.isFirst ? -1 : _identifySliceIndex()),
+        painter: BasePainter(),
         child: Container(
           child: CustomPaint(
-            painter: IndicatorPainter(rotateAngle: angle),
+            painter: IndicatorPainter(rotateAngle: angle, value: value),
             child: Container(
               alignment: Alignment.bottomCenter,
               child: Text(
-                this.isFirst
-                    ? ''
-                    : widget.sections[_identifySliceIndex()].showText
-                        .toUpperCase(),
+                '',
                 style: TextStyle(
                     color: Color(0xff009bd9),
                     fontSize: 20,
@@ -96,7 +94,7 @@ class _CircularSliderState extends State<CircularSlider> {
         body: Center(
       child: Container(
         height: 300,
-        width: boxWidthHeight,
+        width: 300,
         child: _buildPie(),
       ),
     ));

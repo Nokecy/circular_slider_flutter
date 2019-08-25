@@ -3,11 +3,12 @@ import 'package:flutter/material.dart';
 
 class IndicatorPainter extends CustomPainter {
   final double rotateAngle;
+  final int value;
   static double circleWidth = 15;
   static double needleCircleMaskWidth = 10;
   static double lineWidth = 10;
 
-  IndicatorPainter({@required this.rotateAngle});
+  IndicatorPainter({@required this.rotateAngle, this.value});
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -20,8 +21,6 @@ class IndicatorPainter extends CustomPainter {
       ..color = Color(0xffffffff)
       ..style = PaintingStyle.fill;
 
-    // x = cx + r * cos(a)
-    // y = cy + r * sin(a)
     final lengthOfNeedle = (size.width / 4);
     canvas.drawLine(
         Offset(size.width / 2, (size.width / 2)),
@@ -32,6 +31,18 @@ class IndicatorPainter extends CustomPainter {
         Offset(size.width / 2, size.width / 2), circleWidth, paint);
     canvas.drawCircle(Offset(size.width / 2, size.width / 2),
         needleCircleMaskWidth, maskPaint);
+
+    TextPainter textPainter = new TextPainter();
+    textPainter.textDirection = TextDirection.ltr;
+    textPainter.text = new TextSpan(
+        text: value.toString(),
+        style: new TextStyle(
+          color: Colors.blue,
+          fontSize: 30,
+        ));
+    textPainter.layout();
+    textPainter.paint(canvas, Offset(size.width / 2 - 15, size.width / 2 - 60));
+
     canvas.save();
     canvas.rotate(rotateAngle);
     canvas.restore();

@@ -1,4 +1,4 @@
-package com.example.vmmet.mypiedashboard.bean;
+package com.example.flutter_circular_slider.DashBoard.bean;
 
 import java.util.List;
 

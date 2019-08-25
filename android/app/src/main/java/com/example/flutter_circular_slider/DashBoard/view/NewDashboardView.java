@@ -1,4 +1,4 @@
-package com.example.vmmet.mypiedashboard.view;
+package com.example.flutter_circular_slider.DashBoard.view;
 
 import android.content.Context;
 import android.graphics.Canvas;
@@ -7,10 +7,11 @@ import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.RectF;
 import android.util.AttributeSet;
+import android.view.MotionEvent;
 import android.view.View;
 
-import com.example.vmmet.mypiedashboard.bean.DashboradBean;
-import com.example.vmmet.mypiedashboard.bean.HighlightCR;
+import com.example.flutter_circular_slider.DashBoard.bean.DashboradBean;
+import com.example.flutter_circular_slider.DashBoard.bean.HighlightCR;
 
 /**
  * Created by Vmmet on 2016/11/8.
@@ -35,10 +36,6 @@ public class NewDashboardView extends View {
         invalidate();
     }
 
-    public NewDashboardView(Context context) {
-        this(context, null);
-    }
-
     public void setTopText(String topText,int TopTextSize,int TopTextColor) {
         this.topText = topText;
         this.TopTextSize=TopTextSize;
@@ -53,8 +50,8 @@ public class NewDashboardView extends View {
         invalidate();
     }
 
-    public NewDashboardView(Context context, AttributeSet attrs) {
-        super(context, attrs);
+    public NewDashboardView(Context context) {
+        super(context);
         mRadius=0;
         mCenterX=0;
         mCenterY=0;
@@ -86,29 +83,6 @@ public class NewDashboardView extends View {
             }else{
                 height=width;
             }
-//        switch (mode) {
-//            case MeasureSpec.UNSPECIFIED: {//如果没有指定大小，就设置为默认大小
-//                if (dashboradBean.isHalf()){
-//                height = widthMeasureSpec / 4 * 3;
-//                }else{
-//                    height=widthMeasureSpec;
-//                }
-//                break;
-//            }
-//            case MeasureSpec.AT_MOST: {//如果测量模式是最大取值为size
-//                //我们将大小取最大值,你也可以取其他值
-//                if (dashboradBean.isHalf()){
-//                    height = widthMeasureSpec / 4 * 3;
-//                }else{
-//                    height=widthMeasureSpec;
-//                }
-//                break;
-//            }
-//            case MeasureSpec.EXACTLY: {//如果是固定的大小，那就不要去改变它
-//                height=heightMeasureSpec;
-//                break;
-//            }
-//        }
         setMeasuredDimension(width, height);
         }
     }
